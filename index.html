@@ -1,0 +1,544 @@
+<!doctype html>
+<html lang="zh-CN" data-lang="zh">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>刘悠扬 - 个人主页</title>
+<meta name="description" content="Fluent 2 版个人主页">
+
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans@5.0.0/lib/Normal/MiSans-Regular.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/misans@5.0.0/lib/Normal/MiSans-Semibold.min.css">
+
+<style>
+/* ══════════════════════════════════════════════════════════
+   Fluent 2 — Microsoft 设计系统
+   · 4px 圆角、1px 描边 + 双层柔和阴影（shadow2 / shadow4）
+   · 拉丁用 Segoe UI Variable，中文落到 MiSans
+   · 状态靠 fill subtle 变化，不靠颜色跳跃
+   ══════════════════════════════════════════════════════════ */
+
+:root {
+  --bg: #f5f5f5;
+  --surface: #ffffff;
+  --surface-2: #fafafa;
+  --fg: #242424;
+  --fg-2: #616161;
+  --fg-3: #6b6b6b;
+  --stroke: #d1d1d1;
+  --stroke-2: #e0e0e0;
+  --brand: #0f6cbd;
+  --brand-hover: #115ea3;
+  --brand-press: #0c3b5e;
+  --on-brand: #ffffff;
+  --fill-hover: #f5f5f5;
+  --fill-press: #ebebeb;
+  --shadow-2: 0 1px 2px rgb(0 0 0 / 0.14), 0 0 2px rgb(0 0 0 / 0.12);
+  --shadow-4: 0 2px 4px rgb(0 0 0 / 0.14), 0 0 2px rgb(0 0 0 / 0.12);
+  --radius: 4px;
+  --radius-lg: 8px;
+
+  /* MiSans 打头：拉丁与中文都用它，后面的 Segoe 只是兜底 */
+  --font: MiSans, "Segoe UI Variable Text", "Segoe UI", -apple-system,
+    "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f1f1f;
+    --surface: #292929;
+    --surface-2: #2e2e2e;
+    --fg: #ffffff;
+    --fg-2: #c7c7c7;
+    --fg-3: #a0a0a0;
+    --stroke: #666666;
+    --stroke-2: #3d3d3d;
+    --brand: #479ef5;
+    --brand-hover: #62abf5;
+    --brand-press: #2886de;
+    --on-brand: #0b0b0b;
+    --fill-hover: #333333;
+    --fill-press: #3d3d3d;
+    --shadow-2: 0 1px 2px rgb(0 0 0 / 0.28), 0 0 2px rgb(0 0 0 / 0.24);
+    --shadow-4: 0 2px 4px rgb(0 0 0 / 0.28), 0 0 2px rgb(0 0 0 / 0.24);
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  font-size: 14px;
+  line-height: 1.43;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── 顶栏（Fluent 的 CommandBar 质感） ─────────────────── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 48px;
+  padding: 0 20px;
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(16px) saturate(1.4);
+  border-bottom: 1px solid var(--stroke-2);
+}
+
+.appicon {
+  flex: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--surface-2);
+  box-shadow: 0 0 0 1px var(--stroke-2);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.spacer { flex: 1; }
+
+/* 语言切换：分组按钮（非 TabList） */
+.segmented {
+  display: flex;
+  padding: 2px;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  background: var(--surface-2);
+}
+.segmented button {
+  padding: 3px 10px;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--fg-2);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.segmented button:hover { background: var(--fill-hover); color: var(--fg); }
+.segmented button[aria-pressed="true"] {
+  background: var(--surface);
+  color: var(--fg);
+  font-weight: 600;
+  box-shadow: var(--shadow-2);
+  cursor: default;
+}
+
+/* ── 布局 ───────────────────────────────────────────────── */
+.layout {
+  display: grid;
+  grid-template-columns: 296px minmax(0, 1fr);
+  gap: 16px;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 20px;
+  align-items: start;
+}
+
+@media (max-width: 880px) {
+  .layout { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ── 卡片（Fluent 2 Card） ─────────────────────────────── */
+.card {
+  padding: 16px;
+  border: 1px solid var(--stroke-2);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-2);
+}
+
+.card + .card { margin-top: 16px; }
+
+.card-title {
+  margin: 0 0 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--fg);
+}
+
+/* ── 身份卡 ─────────────────────────────────────────────── */
+.identity { text-align: center; padding: 24px 16px; }
+
+.avatar {
+  display: block;
+  width: 80px;
+  height: 80px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--surface-2);
+  /* Fluent 头像的细描边 + 轻投影 */
+  box-shadow: 0 0 0 1px var(--stroke-2), var(--shadow-2);
+}
+
+.name {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 24px;
+}
+
+.latin {
+  margin: 2px 0 0;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--fg-3);
+}
+
+.role {
+  margin: 10px 0 0;
+  font-size: 13px;
+  line-height: 1.5;
+  color: var(--fg-2);
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 16px;
+}
+
+/* ── 按钮（Fluent 2 Button） ───────────────────────────── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border: 1px solid var(--stroke);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--fg);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+.btn:hover { background: var(--fill-hover); }
+.btn:active { background: var(--fill-press); }
+
+.btn-primary {
+  border-color: transparent;
+  background: var(--brand);
+  color: var(--on-brand);
+}
+.btn-primary:hover { background: var(--brand-hover); }
+.btn-primary:active { background: var(--brand-press); }
+
+.btn svg {
+  width: 14px;
+  height: 14px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* ── 静态经历列表 ──────────────────────────────────────── */
+.list { margin: 0; padding: 0; list-style: none; }
+
+.list li {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 6px 8px;
+  margin: 0 -8px;
+  border-radius: var(--radius);
+  color: var(--fg-2);
+}
+
+.list .k { font-weight: 600; color: var(--fg); }
+
+.meta {
+  flex: none;
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
+  color: var(--fg-3);
+  white-space: nowrap;
+}
+
+/* ── 正文 ───────────────────────────────────────────────── */
+p { margin: 0 0 10px; }
+p:last-child { margin-bottom: 0; }
+
+.prose { color: var(--fg-2); }
+
+.prose strong { color: var(--fg); font-weight: 600; }
+
+/* ── 信息行（label + value） ────────────────────────────── */
+.facts { display: grid; gap: 8px; }
+
+.fact {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  gap: 12px;
+  font-size: 13px;
+}
+
+/* ── 课程 / 技能：Fluent 2 描述列表（96px 标签列 + 值，8px 栅格） ── */
+.skill-groups { display: grid; gap: 16px; }
+
+.kv {
+  display: grid;
+  grid-template-columns: 96px minmax(0, 1fr);
+  gap: 4px 16px;
+  margin: 0;
+}
+
+.kv dt {
+  grid-column: 1;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 20px;
+  color: var(--fg);
+}
+
+/* 显式钉在第 2 列，避免第二个 dd 回流到窄标签列 */
+.kv dd {
+  grid-column: 2;
+  margin: 0;
+  font-size: 14px;
+  line-height: 20px;
+  color: var(--fg-2);
+}
+
+@media (max-width: 560px) {
+  .skill-groups { gap: 12px; }
+  .kv { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .kv dd { grid-column: 1; }
+}
+.fact dt { color: var(--fg-3); }
+.fact dd { margin: 0; color: var(--fg-2); }
+
+/* ── 链接 ───────────────────────────────────────────────── */
+a.link { color: var(--brand); text-decoration: none; }
+a.link:hover { text-decoration: underline; }
+
+.sep { color: var(--fg-3); }
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--fg);
+  outline-offset: 1px;
+  border-radius: 2px;
+}
+
+/* ── 语言切换 ───────────────────────────────────────────── */
+html[data-lang="en"] .zh,
+html[data-lang="zh"] .en { display: none; }
+
+/* ── 页脚 ───────────────────────────────────────────────── */
+footer {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 8px 20px 48px;
+  font-size: 12px;
+  color: var(--fg-3);
+}
+/* ── 打印 ───────────────────────────────────────────────── */
+@media print {
+  @page { margin: 16mm 18mm; }
+  body { background: #fff; font-size: 10.5pt; }
+  .topbar { position: static; backdrop-filter: none; border-bottom-color: #ccc; }
+  .segmented { display: none; }
+  .layout { grid-template-columns: 240px minmax(0, 1fr); gap: 12mm; padding: 0; }
+  .card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
+  .card + .card { margin-top: 4mm; }
+  footer { padding: 4mm 0 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <img class="appicon" src="https://avatars.githubusercontent.com/u/136738820?v=4" alt="" width="24" height="24" decoding="async">
+  <h1><span class="zh">个人主页</span><span class="en">HOMEPAGE</span></h1>
+  <span class="spacer"></span>
+  <div class="segmented" role="group" aria-label="语言 / Language">
+    <button type="button" data-lang="zh" aria-pressed="true">中文</button>
+    <button type="button" data-lang="en" aria-pressed="false">EN</button>
+  </div>
+</div>
+
+<div class="layout">
+
+  <!-- ═══ 身份卡 ═══ -->
+  <aside>
+    <div class="card identity">
+      <img class="avatar"
+           src="https://avatars.githubusercontent.com/u/136738820?v=4"
+           alt="刘悠扬的头像"
+           width="80" height="80" decoding="async">
+
+      <div class="zh">
+        <p class="name">刘悠扬</p>
+        <p class="latin">LIU Youyang</p>
+        <p class="role">南开大学 · 统计与数据科学学院</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="mailto:liu.youyang@outlook.com">邮件</a>
+          <a class="btn" href="https://github.com/liu-youyang">GitHub</a>
+        </div>
+      </div>
+
+      <div class="en">
+        <p class="name">LIU Youyang</p>
+        <p class="latin">Nankai University</p>
+        <p class="role">M.Sc. in Statistics<br>School of Statistics &amp; Data Science</p>
+        <div class="actions">
+          <a class="btn btn-primary" href="mailto:liu.youyang@outlook.com">Email</a>
+          <a class="btn" href="https://github.com/liu-youyang">GitHub</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title zh">信息</h2>
+      <h2 class="card-title en">Information</h2>
+      <dl class="facts">
+        <div class="fact zh"><dt>硕士</dt><dd>2026.09 ~ 至今</dd></div>
+        <div class="fact zh"><dt>学士</dt><dd>2022.09 ~ 2026.06</dd></div>
+        <div class="fact en"><dt>M.Sc.</dt><dd>2026.09 ~ present</dd></div>
+        <div class="fact en"><dt>B.Sc.</dt><dd>2022.09 ~ 2026.06</dd></div>
+        <div class="fact zh"><dt>所在</dt><dd>天津</dd></div>
+        <div class="fact en"><dt>Based in</dt><dd>Tianjin, China</dd></div>
+      </dl>
+    </div>
+  </aside>
+
+  <!-- ═══ 主内容 ═══ -->
+  <div>
+
+    <div class="card">
+      <h2 class="card-title zh">关于</h2>
+      <h2 class="card-title en">About</h2>
+      <div class="prose zh">
+        <p>目前在南开大学统计与数据科学学院攻读硕士学位，研究方向为基于<strong>扩散模型与流模型</strong>的图像编辑。</p>
+        <p>本科阶段接受了系统的数理基础训练，至今仍出于个人兴趣学习高等概率论与部分现代统计学方法。</p>
+      </div>
+      <div class="prose en">
+        <p>I am an M.Sc. student in Statistics at Nankai University, and my current research focuses on <strong>image editing with diffusion and flow-based generative models</strong>.</p>
+        <p>My undergraduate training emphasized mathematical foundations and statistical theory. I am now studying advanced probability and several modern statistical methods out of personal interest.</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title zh">教育经历</h2>
+      <h2 class="card-title en">Education</h2>
+
+      <div class="zh">
+        <ul class="list">
+          <li><span><span class="k">统计学硕士</span>，南开大学</span><span class="meta">2026 ~ 至今</span></li>
+          <li><span><span class="k">统计学学士</span>，南开大学</span><span class="meta">2022 ~ 2026</span></li>
+        </ul>
+      </div>
+
+      <div class="en">
+        <ul class="list">
+          <li><span><span class="k">M.Sc. in Statistics</span>, Nankai University</span><span class="meta">2026 ~ present</span></li>
+          <li><span><span class="k">B.Sc. in Statistics</span>, Nankai University</span><span class="meta">2022 ~ 2026</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title zh">知识背景</h2>
+      <h2 class="card-title en">Background</h2>
+
+      <div class="skill-groups">
+
+        <dl class="kv zh">
+          <dt>课程</dt>
+          <dd>测度论 · 概率论 · 随机分析 · 泛函分析 · 矩阵理论</dd>
+          <dd>统计推断 · 多元统计 · 高维统计 · 渐近理论 · 统计计算 · 回归分析</dd>
+        </dl>
+
+        <dl class="kv zh">
+          <dt>技能</dt>
+          <dd>Python · R · PyTorch · LaTeX 与 Typst</dd>
+          <dd>统计模拟与重抽样 · 统计建模与假设检验 · 空间数据分析 · 问卷设计与信效度检验</dd>
+        </dl>
+
+        <dl class="kv en">
+          <dt>Courses</dt>
+          <dd>Measure Theory · Probability · Stochastic Analysis · Functional Analysis · Matrix Theory</dd>
+          <dd>Statistical Inference · Multivariate Statistics · High-Dimensional Statistics · Asymptotic Statistics · Statistical Computing · Regression Analysis</dd>
+        </dl>
+
+        <dl class="kv en">
+          <dt>Skills</dt>
+          <dd>Python · R · PyTorch · LaTeX &amp; Typst</dd>
+          <dd>Statistical Simulation &amp; Resampling · Statistical Modeling &amp; Hypothesis Testing · Spatial Data Analysis · Questionnaire Design &amp; Reliability/Validity Testing</dd>
+        </dl>
+
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title zh">实习</h2>
+      <h2 class="card-title en">Experience</h2>
+
+      <div class="zh">
+        <ul class="list">
+          <li><span><span class="k">实习生</span>，天津市统计局</span><span class="meta">2025.07 ~ 2025.09</span></li>
+        </ul>
+      </div>
+
+      <div class="en">
+        <ul class="list">
+          <li><span><span class="k">Intern</span>, Tianjin Bureau of Statistics</span><span class="meta">Jul ~ Sep 2025</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 class="card-title zh">联系方式</h2>
+      <h2 class="card-title en">Contact</h2>
+
+      <a class="link" href="mailto:liu.youyang@outlook.com">liu.youyang@outlook.com</a>
+      <span class="sep"> · </span>
+      <a class="link" href="https://github.com/liu-youyang">github.com/liu-youyang</a>
+    </div>
+
+  </div>
+</div>
+
+<footer><span class="zh">© 2026 刘悠扬 · LIU Youyang</span><span class="en">© 2026 LIU Youyang</span></footer>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btns = document.querySelectorAll('.segmented button[data-lang]');
+    function set(lang) {
+      root.dataset.lang = lang;
+      root.setAttribute('lang', lang === 'en' ? 'en' : 'zh-CN');
+      document.title = lang === 'en' ? 'Liu, Y. - Homepage' : '刘悠扬 - 个人主页';
+      btns.forEach(function (b) {
+        b.setAttribute('aria-pressed', String(b.dataset.lang === lang));
+      });
+    }
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () { set(b.dataset.lang); });
+    });
+    set(root.dataset.lang === 'en' ? 'en' : 'zh');
+  })();
+</script>
+</body>
+</html>
